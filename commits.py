@@ -39,7 +39,12 @@ for repo in repos:
     c_commits = call_github_api(repo_commits_url, {'per_page': 100, 'page': c_page, 'since': COMMITS_SINCE}, is_url=True)
     if len(c_commits) == 0:
       break
-    commits += c_commits
+
+    for commit in c_commits:
+      c_commit = call_github_api(commit['url'], is_url=True) 
+      commit['stats'] = c_commit['stats']
+      commits.append(commit)
+
     c_page += 1
 
 with open('data/commits.json', 'w+', encoding='utf-8') as f:
